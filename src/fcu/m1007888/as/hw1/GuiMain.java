@@ -112,6 +112,14 @@ public class GuiMain extends JFrame implements WindowListener{
     	MainNotePad.getinstance().logDEBUG("[clearGui] clear!");
     }
 	
+	/*
+	 * main control
+	 */
+	
+	/*
+	 * module
+	 */
+	
 	private int color = 0;
 	
 	private JPanel addGuiNote(Note note) {
@@ -320,7 +328,7 @@ public class GuiMain extends JFrame implements WindowListener{
 	}
 	
 	/*
-	 * Window Listener
+	 * WindowListener
 	 */
 
 	@Override
