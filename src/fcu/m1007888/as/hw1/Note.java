@@ -83,10 +83,6 @@ public class Note {
 	 * 
 	 */
 	
-	public void show() {
-		
-	}
-	
 	public boolean search(String people, String description, Date time, String location) {
 		return false;
 	}
