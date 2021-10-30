@@ -82,23 +82,33 @@ public class MainNotePad extends JFrame implements WindowListener{
 		
 	}
 	
+	private void reload() {
+		clearGui();
+		initGui();
+	}
+	
 	/*
 	 * function
 	 */
 	
 	private void loadNotes() {
+		logDEBUG("[loadNotes] Start ===============");
+		
 		mapNote = new TreeMap<Integer, Note>();
 		File folder = new File("data");
 		if (!folder.exists()) {
 			folder.mkdir();
+			logDEBUG("[loadNotes] make data folder");
 		}
 		
 		/*
 		 * load
 		 */
+		logDEBUG("[loadNotes] load files");
 		for (File f : folder.listFiles()) {
 			Note note = loadNoteFromFile(f);
 			mapNote.put(note.getUID(), note);
+			logDEBUG("[loadNotes] loaded note " + note.getUID());
 		}
 		
 		/*
@@ -123,21 +133,24 @@ public class MainNotePad extends JFrame implements WindowListener{
 		 * loadImg
 		 */
 		
+		logDEBUG("[loadNotes] load media");
 		if(!mapNote.isEmpty()) {
 			for(Note n : mapNote.values()) {
 				n.loadImg();
 			}
 		}
+		logDEBUG("[loadNotes] Finish ===============");
 		
 	}
 	
 	private void saveNotes() {
-		logDEBUG("[saveNotes] Start");
+		logDEBUG("[saveNotes] Start ===============");
 		if(!mapNote.isEmpty()) {
 			for(Note n : mapNote.values()) {
 				saveNotetoFile(n);
 			}
 		}
+		logDEBUG("[loadNotes] Finish ===============");
 	}
 	
 	private Note loadNoteFromFile(File file) {
@@ -145,13 +158,6 @@ public class MainNotePad extends JFrame implements WindowListener{
 			FileInputStream fi = new FileInputStream(file);
 			ObjectInputStream oi = new ObjectInputStream(fi);
 			Note note = (Note) oi.readObject();
-			
-			/*note.setUID(1);
-			note.setPeople("自己");
-			note.setTime(new java.util.Date());
-			note.setLocation("eclipse workspace");
-			note.setDescription("這是一個測試記錄\n包含完整訊息和一張預設圖片。");
-			note.setExtraLoc("img.jpeg");*/
 			
 			oi.close();
 			fi.close();
@@ -165,20 +171,26 @@ public class MainNotePad extends JFrame implements WindowListener{
 	}
 	
 	private void saveNotetoFile(Note note) {
-		logDEBUG("[saveNotes] saveNotetoFile");
 		try {
 			FileOutputStream fo = new FileOutputStream(new File("data" + File.separator + "note_" + note.getUID() + ".data"));
 			ObjectOutputStream oo = new ObjectOutputStream(fo);
 			
-			logDEBUG("[saveNotes] write " + note.getUID());
+			logDEBUG("[saveNotes] saveNotetoFile " + note.getUID());
 			oo.writeObject(note);
-			logDEBUG("[saveNotes] finish");
+			logDEBUG("[saveNotes] write " + note.getUID() + " finish");
 			
 			oo.close();
 			fo.close();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void deleteNoteFile(int UID) {
+		File file = new File("data" + File.separator + "note_" + UID + ".data");
+		if (file.exists()) {
+			file.delete();
 		}
 	}
 	
@@ -190,8 +202,13 @@ public class MainNotePad extends JFrame implements WindowListener{
 		
 	}
 	
-	private void deleteNote() {
-		
+	private void deleteNote(int UID) {
+		if(!mapNote.isEmpty()) {
+			mapNote.remove(UID);
+			logDEBUG("[deleteNote] remove from map");
+		}
+		deleteNoteFile(UID);
+		logDEBUG("[deleteNote] delete file");
 	}
 	
 	private void showNote() {
@@ -211,6 +228,8 @@ public class MainNotePad extends JFrame implements WindowListener{
     private Container containerMain;
 	
 	private void initGui() {
+		logDEBUG("[initGui] Start ===============");
+		
 		/*
 		 * main frame
 		 */
@@ -248,6 +267,8 @@ public class MainNotePad extends JFrame implements WindowListener{
         /*
          * load Note
          */
+        logDEBUG("[initGui] load notes gui");
+        
         JPanel jp_notes = new JPanel();
         BoxLayout layoutNotes = new BoxLayout(jp_notes, BoxLayout.PAGE_AXIS);
         jp_notes.setLayout(layoutNotes);
@@ -256,9 +277,11 @@ public class MainNotePad extends JFrame implements WindowListener{
         	for (Note n : mapNote.values()) {
         		JPanel p = addGuiNote(n);
         		jp_notes.add(p);
+        		logDEBUG("[initGui] add " + n.getUID());
         	}
         } else {
         	jp_notes.add(addJLabel("無記錄", 0, 0, 100, 25));
+        	logDEBUG("[initGui] no notes, skip");
         }
         
         JScrollPane sp = new JScrollPane(jp_notes, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -270,7 +293,16 @@ public class MainNotePad extends JFrame implements WindowListener{
         
         addWindowListener(this);
         setVisible(true);
+        
+        logDEBUG("[initGui] Finish ===============");
 	}
+	
+	private void clearGui() {
+    	containerMain.removeAll();
+    	containerMain.revalidate();
+    	containerMain.repaint();
+    	logDEBUG("[clearGui] clear!");
+    }
 	
 	private int color = 0;
 	
@@ -468,7 +500,10 @@ public class MainNotePad extends JFrame implements WindowListener{
 			final int UID = noteUID;
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				logDEBUG("[deleteNote] Start delete note " + UID);
+				deleteNote(UID);
+				logDEBUG("[deleteNote] finish, reload gui");
+				reload();
 			}
 			
 		};
