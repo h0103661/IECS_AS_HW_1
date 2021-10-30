@@ -9,6 +9,14 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -24,7 +32,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.ImageIcon;
 
 @SuppressWarnings("unused")
-public class MainNotePad extends JFrame{
+public class MainNotePad extends JFrame implements WindowListener{
 	
 	private static MainNotePad instance;
 	
@@ -69,41 +77,110 @@ public class MainNotePad extends JFrame{
 	private Map<Integer, Note> mapNote;
 	
 	private void init() {
-		loadNote();
+		loadNotes();
 		initGui();
+		
 	}
 	
-	private void loadNote() {
+	/*
+	 * function
+	 */
+	
+	private void loadNotes() {
 		mapNote = new TreeMap<Integer, Note>();
+		File folder = new File("data");
+		if (!folder.exists()) {
+			folder.mkdir();
+		}
+		
+		/*
+		 * load
+		 */
+		for (File f : folder.listFiles()) {
+			Note note = loadNoteFromFile(f);
+			mapNote.put(note.getUID(), note);
+		}
 		
 		/*
 		 * TEST
 		 */
-		Note test1 = new Note();
+		/*Note test1 = new Note();
 		test1.setUID(1);
 		test1.setPeople("自己");
-		test1.setLocation("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		test1.setTime(new java.util.Date());
+		test1.setLocation("eclipse workspace");
+		test1.setDescription("這是一個測試記錄\n包含完整訊息和一張預設圖片。");
 		test1.setExtraLoc("img.jpeg");
 		mapNote.put(1, test1);
 		
 		Note test2 = new Note();
 		test2.setUID(205);
 		test2.setPeople("老師");
-		test2.setDescription("123456\n67890");
-		mapNote.put(2, test2);
+		test2.setDescription("這是一個測試記錄\n訊息並不完全\n用來測試例外錯誤");
+		mapNote.put(2, test2);*/
 		
 		/*
 		 * loadImg
 		 */
 		
-		for(Note n : mapNote.values()) {
-			n.loadImg();
+		if(!mapNote.isEmpty()) {
+			for(Note n : mapNote.values()) {
+				n.loadImg();
+			}
+		}
+		
+	}
+	
+	private void saveNotes() {
+		logDEBUG("[saveNotes] Start");
+		if(!mapNote.isEmpty()) {
+			for(Note n : mapNote.values()) {
+				saveNotetoFile(n);
+			}
 		}
 	}
 	
-	/*
-	 * function
-	 */
+	private Note loadNoteFromFile(File file) {
+		try {
+			FileInputStream fi = new FileInputStream(file);
+			ObjectInputStream oi = new ObjectInputStream(fi);
+			Note note = (Note) oi.readObject();
+			
+			/*note.setUID(1);
+			note.setPeople("自己");
+			note.setTime(new java.util.Date());
+			note.setLocation("eclipse workspace");
+			note.setDescription("這是一個測試記錄\n包含完整訊息和一張預設圖片。");
+			note.setExtraLoc("img.jpeg");*/
+			
+			oi.close();
+			fi.close();
+			
+			return note;
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	private void saveNotetoFile(Note note) {
+		logDEBUG("[saveNotes] saveNotetoFile");
+		try {
+			FileOutputStream fo = new FileOutputStream(new File("data" + File.separator + "note_" + note.getUID() + ".data"));
+			ObjectOutputStream oo = new ObjectOutputStream(fo);
+			
+			logDEBUG("[saveNotes] write " + note.getUID());
+			oo.writeObject(note);
+			logDEBUG("[saveNotes] finish");
+			
+			oo.close();
+			fo.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void addNote() {
 		
@@ -152,15 +229,15 @@ public class MainNotePad extends JFrame{
         JPanel jp_basicBtn = new JPanel();
         
         JButton btn_add = addJButton("新增記錄", 0, 0, 100, 25);
-        btn_add.addActionListener(null);
+        btn_add.addActionListener(getALAddNote());
         jp_basicBtn.add(btn_add);
         
         JButton btn_showall = addJButton("顯示所有記錄", 100, 0, 100, 25);
-        btn_showall.addActionListener(null);
+        btn_showall.addActionListener(getALShowNote());
         jp_basicBtn.add(btn_showall);
         
         JButton btn_search = addJButton("查詢記錄", 200, 0, 100, 25);
-        btn_search.addActionListener(null);
+        btn_search.addActionListener(getALSearchNote());
         jp_basicBtn.add(btn_search);
         
         JLabel lb_total = addJLabel("總數: " + mapNote.size(), 200, 0, 100, 25);
@@ -191,7 +268,7 @@ public class MainNotePad extends JFrame{
          * finish
          */
         
-        
+        addWindowListener(this);
         setVisible(true);
 	}
 	
@@ -336,6 +413,42 @@ public class MainNotePad extends JFrame{
 	 * 
 	 */
 	
+	private ActionListener getALAddNote() {
+		ActionListener al = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+			
+		};
+		return al;
+	}
+	
+	private ActionListener getALShowNote() {
+		ActionListener al = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+			
+		};
+		return al;
+	}
+	
+	private ActionListener getALSearchNote() {
+		ActionListener al = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+			
+		};
+		return al;
+	}
+	
 	private ActionListener getALNoteModify(int noteUID) {
 		ActionListener al = new ActionListener() {
 
@@ -360,5 +473,44 @@ public class MainNotePad extends JFrame{
 			
 		};
 		return al;
+	}
+	
+	/*
+	 * Window Listener
+	 */
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		saveNotes();
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		
 	}
 }

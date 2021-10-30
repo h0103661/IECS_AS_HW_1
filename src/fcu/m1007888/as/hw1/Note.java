@@ -3,11 +3,14 @@ package fcu.m1007888.as.hw1;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
 import javax.imageio.ImageIO;
 
-public class Note {
+public class Note implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	private int UID;
 	
 	private String people;
@@ -16,11 +19,16 @@ public class Note {
 	private String location;
 	
 	private String extraLoc;
-	private BufferedImage img;
-	private String med;
+	transient private BufferedImage img;
+	transient private String med;
 
 	public Note() {
-		
+		setUID(0);
+		setPeople("");
+		setTime(new java.util.Date());
+		setLocation("");
+		setDescription("");
+		setExtraLoc("");
 	}
 	
 	/*
@@ -137,5 +145,20 @@ public class Note {
 	
 	public boolean search(String people, String description, Date time, String location) {
 		return false;
+	}
+	
+	/*
+	 * 
+	 */
+	
+	@Override
+	public String toString() {
+		return 
+				"UID:" + this.getUID() + "\n" + 
+				"People: " + this.getPeople() + "\n" + 
+				"Date: " + this.getTime() + "\n" + 
+				"Location: " + this.location + "\n" + 
+				"Description: " + this.getDescription() + "\n" + 
+				"ExtraLoc: " + this.getExtraLoc() + "\n";
 	}
 }
