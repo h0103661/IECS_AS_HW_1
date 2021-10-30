@@ -3,11 +3,8 @@ package fcu.m1007888.as.hw1;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -20,7 +17,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.ImageIcon;
 
+@SuppressWarnings("unused")
 public class MainNotePad extends JFrame{
 	
 	private static MainNotePad instance;
@@ -80,6 +79,7 @@ public class MainNotePad extends JFrame{
 		test1.setUID(1);
 		test1.setPeople("自己");
 		test1.setLocation("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		test1.setExtraLoc("img.jpeg");
 		mapNote.put(1, test1);
 		
 		Note test2 = new Note();
@@ -87,6 +87,14 @@ public class MainNotePad extends JFrame{
 		test2.setPeople("老師");
 		test2.setDescription("123456\n67890");
 		mapNote.put(2, test2);
+		
+		/*
+		 * loadImg
+		 */
+		
+		for(Note n : mapNote.values()) {
+			n.loadImg();
+		}
 	}
 	
 	/*
@@ -189,46 +197,60 @@ public class MainNotePad extends JFrame{
 		GridBagLayout layout = new GridBagLayout();
 		p.setLayout(layout);
 		
+		int lx1 = 100;
+		int ly1 = 25;
 		GridBagConstraints bag1 = new GridBagConstraints();
 		bag1.gridx = 0;
 		bag1.gridy = 0;
-		p.add(addJLabel("UID" + ":", 0, 0, 100, 25), bag1);
+		p.add(addJLabel("UID" + ":", 0, 0, lx1, ly1), bag1);
 		bag1.gridx = 0;
 		bag1.gridy = 1;
-		p.add(addJLabel("人物" + ":", 0, 0, 100, 25), bag1);
+		p.add(addJLabel("人物" + ":", 0, 0, lx1, ly1), bag1);
 		bag1.gridx = 0;
 		bag1.gridy = 2;
-		p.add(addJLabel("時間" + ":", 0, 0, 100, 25), bag1);
+		p.add(addJLabel("時間" + ":", 0, 0, lx1, ly1), bag1);
 		bag1.gridx = 0;
 		bag1.gridy = 3;
-		p.add(addJLabel("地點" + ":", 0, 0, 100, 25), bag1);
+		p.add(addJLabel("地點" + ":", 0, 0, lx1, ly1), bag1);
 		bag1.gridx = 0;
 		bag1.gridy = 4;
-		p.add(addJLabel("描述" + ":", 0, 0, 100, 25), bag1);
+		p.add(addJLabel("描述" + ":", 0, 0, lx1, ly1), bag1);
 		bag1.gridx = 0;
 		bag1.gridy = 5;
-		p.add(addJLabel("附件" + ":", 0, 0, 100, 25), bag1);
+		p.add(addJLabel("附件" + ":", 0, 0, lx1, ly1), bag1);
 		
+		int lx2 = 900;
+		int ly2 = 25;
+		int ly2b = 200;
+		int ly2c = 300;
 		GridBagConstraints bag2 = new GridBagConstraints();
 		bag2.gridx = 1;
 		bag2.gridy = 0;
-		bag2.gridwidth = 3;
-		p.add(addJTextFieldFix("" + note.getUID(), 0, 0, 500, 25), bag2);
+		p.add(addJTextFieldFix("" + note.getUID(), 0, 0, lx2, ly2), bag2);
 		bag2.gridx = 1;
 		bag2.gridy = 1;
-		p.add(addJTextFieldFix("" + note.getPeople(), 0, 0, 500, 25), bag2);
+		p.add(addJTextFieldFix("" + note.getPeople(), 0, 0, lx2, ly2), bag2);
 		bag2.gridx = 1;
 		bag2.gridy = 2;
-		p.add(addJTextFieldFix("" + note.getTime().toString(), 0, 0, 500, 25), bag2);
+		p.add(addJTextFieldFix("" + note.getTime().toString(), 0, 0, lx2, ly2), bag2);
 		bag2.gridx = 1;
 		bag2.gridy = 3;
-		p.add(addJTextFieldFix("" + note.getLocation(), 0, 0, 500, 25), bag2);
+		p.add(addJTextFieldFix("" + note.getLocation(), 0, 0, lx2, ly2), bag2);
 		bag2.gridx = 1;
 		bag2.gridy = 4;
-		p.add(addJTextAreaFix("" + note.getDescription(), 0, 0, 500, 200), bag2);
+		p.add(addJTextAreaFix("" + note.getDescription(), 0, 0, lx2, ly2b), bag2);
 		bag2.gridx = 1;
 		bag2.gridy = 5;
-		p.add(addJTextFieldFix("", 0, 0, 500, 300), bag2);
+		if(note.hasExtra() == 1) {
+			JLabel j = new JLabel(new ImageIcon(note.getImg()));
+			JScrollPane sp = new JScrollPane(j);
+			sp.setPreferredSize(new Dimension(lx2, ly2c));
+			p.add(sp, bag2);
+		} else if(note.hasExtra() == 2) {
+			p.add(addJTextFieldFix("", 0, 0, lx2, ly2c), bag2);
+		} else {
+			p.add(addJTextFieldFix("", 0, 0, lx2, ly2c), bag2);
+		}
 		
 		return p;
 	}
