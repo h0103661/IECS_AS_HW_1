@@ -2,6 +2,9 @@ package fcu.m1007888.as.hw1;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -10,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 public class MainNotePad extends JFrame{
@@ -64,7 +68,18 @@ public class MainNotePad extends JFrame{
 	private void loadNote() {
 		mapNote = new TreeMap<Integer, Note>();
 		
+		/*
+		 * TEST
+		 */
+		Note test1 = new Note();
+		test1.setUID(1);
+		test1.setPeople("自己");
+		mapNote.put(1, test1);
 		
+		Note test2 = new Note();
+		test2.setUID(205);
+		test2.setPeople("老師");
+		mapNote.put(2, test2);
 	}
 	
 	/*
@@ -135,33 +150,54 @@ public class MainNotePad extends JFrame{
          * load Note
          */
         JPanel jp_notes = new JPanel();
+        FlowLayout layoutNotes = new FlowLayout();
+        jp_notes.setLayout(layoutNotes);
         
         if (!mapNote.isEmpty()) {
         	for (Note n : mapNote.values()) {
-        		addGuiNote(jp_notes, n);
+        		JPanel p = addGuiNote(n);
+        		jp_notes.add(p);
         	}
         } else {
         	jp_notes.add(addJLabel("無記錄", 0, 0, 100, 25));
         }
         
-        containerMain.add(jp_notes, BorderLayout.CENTER);
+        JScrollPane sp = new JScrollPane(jp_notes, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        containerMain.add(sp, BorderLayout.CENTER);
         
         /*
          * finish
          */
         
-        //JScrollPane sp = new JScrollPane(containerMain, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        
         setVisible(true);
 	}
 	
-	private void addGuiNote(JPanel jp, Note note) {
+	private JPanel addGuiNote(Note note) {
+		JPanel p = new JPanel();
+		p.setBounds(0, 0, 1000, 700);
+		GridLayout layout = new GridLayout(10, 1);
+		p.setLayout(layout);
 		
+		p.add(addJLabel("UID" + ":", 0, 0, 100, 25));
+		p.add(addJTextFieldFix("" + note.getUID(), 0, 0, 500, 25));
+		p.add(addJLabel("人物" + ":", 0, 0, 100, 25));
+		p.add(addJTextFieldFix("" + note.getPeople(), 0, 0, 500, 25));
+		p.add(addJLabel("時間" + ":", 0, 0, 100, 25));
+		p.add(addJTextFieldFix("" + note.getTime().toString(), 0, 0, 500, 25));
+		p.add(addJLabel("地點" + ":", 0, 0, 100, 25));
+		p.add(addJTextFieldFix("" + note.getLocation(), 0, 0, 500, 25));
+		p.add(addJLabel("描述" + ":", 0, 0, 100, 25));
+		p.add(addJTextFieldFix("" + note.getDescription(), 0, 0, 500, 25));
+		p.add(addJLabel("附件" + ":", 0, 0, 100, 25));
+		p.add(addJTextFieldFix("", 0, 0, 500, 500));
+		
+		return p;
 	}
 	
 	///////////////////////////////////
 	
 	private JLabel addJLabel(String title, int x, int y, int width, int height) {
-		
 		JLabel j = new JLabel(title);
 		j.setBounds(x, y, width, height);
 		
@@ -171,6 +207,21 @@ public class MainNotePad extends JFrame{
 	private JButton addJButton(String title, int x, int y) {
 		JButton j = new JButton(title);
 		j.setBounds(x, y, 100, 25);
+		
+		return j;
+	}
+	
+	private JTextField addJTextFieldFix(String text, int x, int y, int width, int height) {
+		JTextField j = addJTextField(text, x, y, width, height);
+		j.setEditable(false);
+		
+		return j;
+	}
+	
+	private JTextField addJTextField(String text, int x, int y, int width, int height) {
+		JTextField j = new JTextField();
+		j.setBounds(x, y, width, height);
+		j.setText(text);
 		
 		return j;
 	}

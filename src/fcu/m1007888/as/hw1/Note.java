@@ -32,6 +32,9 @@ public class Note {
 	}
 
 	public String getPeople() {
+		if(people == null || people.isEmpty() || people.isBlank()) {
+			return "";
+		}
 		return people;
 	}
 
@@ -40,6 +43,9 @@ public class Note {
 	}
 
 	public String getDescription() {
+		if(description == null || description.isEmpty() || description.isBlank()) {
+			return "";
+		}
 		return description;
 	}
 
@@ -47,8 +53,11 @@ public class Note {
 		this.description = description;
 	}
 
-	public Date getTime() {
-		return time;
+	public String getTime() {
+		if(time == null) {
+			return "";
+		}
+		return time.toString();
 	}
 
 	public void setTime(Date time) {
@@ -56,6 +65,9 @@ public class Note {
 	}
 
 	public String getLocation() {
+		if(location == null || location.isEmpty() || location.isBlank()) {
+			return "";
+		}
 		return location;
 	}
 
