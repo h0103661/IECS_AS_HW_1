@@ -1,10 +1,14 @@
 package fcu.m1007888.as.hw1;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -147,15 +151,15 @@ public class MainNotePad extends JFrame{
          */
         JPanel jp_basicBtn = new JPanel();
         
-        JButton btn_add = addJButton("新增記錄", 0, 0);
+        JButton btn_add = addJButton("新增記錄", 0, 0, 100, 25);
         btn_add.addActionListener(null);
         jp_basicBtn.add(btn_add);
         
-        JButton btn_showall = addJButton("顯示所有記錄", 100, 0);
+        JButton btn_showall = addJButton("顯示所有記錄", 100, 0, 100, 25);
         btn_showall.addActionListener(null);
         jp_basicBtn.add(btn_showall);
         
-        JButton btn_search = addJButton("查詢記錄", 200, 0);
+        JButton btn_search = addJButton("查詢記錄", 200, 0, 100, 25);
         btn_search.addActionListener(null);
         jp_basicBtn.add(btn_search);
         
@@ -191,11 +195,20 @@ public class MainNotePad extends JFrame{
         setVisible(true);
 	}
 	
+	private int color = 0;
+	
 	private JPanel addGuiNote(Note note) {
 		JPanel p = new JPanel();
-		p.setPreferredSize(new Dimension(1000, 700));
+		p.setPreferredSize(new Dimension(1000, 750));
 		GridBagLayout layout = new GridBagLayout();
 		p.setLayout(layout);
+		if (color == 0) {
+			color = 1;
+			p.setBackground(Color.GREEN);
+		} else {
+			color = 0;
+			p.setBackground(Color.YELLOW);
+		}
 		
 		int lx1 = 100;
 		int ly1 = 25;
@@ -218,6 +231,20 @@ public class MainNotePad extends JFrame{
 		bag1.gridx = 0;
 		bag1.gridy = 5;
 		p.add(addJLabel("附件" + ":", 0, 0, lx1, ly1), bag1);
+		bag1.gridx = 0;
+		bag1.gridy = 6;
+		JButton btnM = addJButton("修改", 0, 0, lx1, ly1);
+		btnM.addActionListener(getALNoteModify(note.getUID()));
+		p.add(btnM, bag1);
+		bag1.gridx = 0;
+		bag1.gridy = 7;
+		JButton btnD = addJButton("刪除", 0, 0, lx1, ly1);
+		btnD.addActionListener(getALNoteDelete(note.getUID()));
+		p.add(btnD, bag1);
+		
+		/*
+		 * 
+		 */
 		
 		int lx2 = 900;
 		int ly2 = 25;
@@ -264,9 +291,9 @@ public class MainNotePad extends JFrame{
 		return j;
 	}
 	
-	private JButton addJButton(String title, int x, int y) {
+	private JButton addJButton(String title, int x, int y, int width, int height) {
 		JButton j = new JButton(title);
-		j.setBounds(x, y, 100, 25);
+		j.setBounds(x, y, width, height);
 		
 		return j;
 	}
@@ -274,6 +301,7 @@ public class MainNotePad extends JFrame{
 	private JTextField addJTextFieldFix(String text, int x, int y, int width, int height) {
 		JTextField j = addJTextField(text, x, y, width, height);
 		j.setEditable(false);
+		j.setBackground(Color.WHITE);
 		
 		return j;
 	}
@@ -290,6 +318,7 @@ public class MainNotePad extends JFrame{
 	private JTextArea addJTextAreaFix(String text, int x, int y, int width, int height) {
 		JTextArea j = addJTextArea(text, x, y, width, height);
 		j.setEditable(false);
+		j.setBackground(Color.WHITE);
 		
 		return j;
 	}
@@ -301,5 +330,35 @@ public class MainNotePad extends JFrame{
 		j.setPreferredSize(new Dimension(width, height));
 		
 		return j;
+	}
+	
+	/*
+	 * 
+	 */
+	
+	private ActionListener getALNoteModify(int noteUID) {
+		ActionListener al = new ActionListener() {
+
+			final int UID = noteUID;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+			
+		};
+		return al;
+	}
+	
+	private ActionListener getALNoteDelete(int noteUID) {
+		ActionListener al = new ActionListener() {
+
+			final int UID = noteUID;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+			
+		};
+		return al;
 	}
 }
