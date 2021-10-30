@@ -2,17 +2,22 @@ package fcu.m1007888.as.hw1;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
@@ -74,11 +79,13 @@ public class MainNotePad extends JFrame{
 		Note test1 = new Note();
 		test1.setUID(1);
 		test1.setPeople("自己");
+		test1.setLocation("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		mapNote.put(1, test1);
 		
 		Note test2 = new Note();
 		test2.setUID(205);
 		test2.setPeople("老師");
+		test2.setDescription("123456\n67890");
 		mapNote.put(2, test2);
 	}
 	
@@ -144,13 +151,16 @@ public class MainNotePad extends JFrame{
         btn_search.addActionListener(null);
         jp_basicBtn.add(btn_search);
         
+        JLabel lb_total = addJLabel("總數: " + mapNote.size(), 200, 0, 100, 25);
+        jp_basicBtn.add(lb_total);
+        
         containerMain.add(jp_basicBtn, BorderLayout.NORTH);
         
         /*
          * load Note
          */
         JPanel jp_notes = new JPanel();
-        FlowLayout layoutNotes = new FlowLayout();
+        BoxLayout layoutNotes = new BoxLayout(jp_notes, BoxLayout.PAGE_AXIS);
         jp_notes.setLayout(layoutNotes);
         
         if (!mapNote.isEmpty()) {
@@ -175,22 +185,50 @@ public class MainNotePad extends JFrame{
 	
 	private JPanel addGuiNote(Note note) {
 		JPanel p = new JPanel();
-		p.setBounds(0, 0, 1000, 700);
-		GridLayout layout = new GridLayout(10, 1);
+		p.setPreferredSize(new Dimension(1000, 700));
+		GridBagLayout layout = new GridBagLayout();
 		p.setLayout(layout);
 		
-		p.add(addJLabel("UID" + ":", 0, 0, 100, 25));
-		p.add(addJTextFieldFix("" + note.getUID(), 0, 0, 500, 25));
-		p.add(addJLabel("人物" + ":", 0, 0, 100, 25));
-		p.add(addJTextFieldFix("" + note.getPeople(), 0, 0, 500, 25));
-		p.add(addJLabel("時間" + ":", 0, 0, 100, 25));
-		p.add(addJTextFieldFix("" + note.getTime().toString(), 0, 0, 500, 25));
-		p.add(addJLabel("地點" + ":", 0, 0, 100, 25));
-		p.add(addJTextFieldFix("" + note.getLocation(), 0, 0, 500, 25));
-		p.add(addJLabel("描述" + ":", 0, 0, 100, 25));
-		p.add(addJTextFieldFix("" + note.getDescription(), 0, 0, 500, 25));
-		p.add(addJLabel("附件" + ":", 0, 0, 100, 25));
-		p.add(addJTextFieldFix("", 0, 0, 500, 500));
+		GridBagConstraints bag1 = new GridBagConstraints();
+		bag1.gridx = 0;
+		bag1.gridy = 0;
+		p.add(addJLabel("UID" + ":", 0, 0, 100, 25), bag1);
+		bag1.gridx = 0;
+		bag1.gridy = 1;
+		p.add(addJLabel("人物" + ":", 0, 0, 100, 25), bag1);
+		bag1.gridx = 0;
+		bag1.gridy = 2;
+		p.add(addJLabel("時間" + ":", 0, 0, 100, 25), bag1);
+		bag1.gridx = 0;
+		bag1.gridy = 3;
+		p.add(addJLabel("地點" + ":", 0, 0, 100, 25), bag1);
+		bag1.gridx = 0;
+		bag1.gridy = 4;
+		p.add(addJLabel("描述" + ":", 0, 0, 100, 25), bag1);
+		bag1.gridx = 0;
+		bag1.gridy = 5;
+		p.add(addJLabel("附件" + ":", 0, 0, 100, 25), bag1);
+		
+		GridBagConstraints bag2 = new GridBagConstraints();
+		bag2.gridx = 1;
+		bag2.gridy = 0;
+		bag2.gridwidth = 3;
+		p.add(addJTextFieldFix("" + note.getUID(), 0, 0, 500, 25), bag2);
+		bag2.gridx = 1;
+		bag2.gridy = 1;
+		p.add(addJTextFieldFix("" + note.getPeople(), 0, 0, 500, 25), bag2);
+		bag2.gridx = 1;
+		bag2.gridy = 2;
+		p.add(addJTextFieldFix("" + note.getTime().toString(), 0, 0, 500, 25), bag2);
+		bag2.gridx = 1;
+		bag2.gridy = 3;
+		p.add(addJTextFieldFix("" + note.getLocation(), 0, 0, 500, 25), bag2);
+		bag2.gridx = 1;
+		bag2.gridy = 4;
+		p.add(addJTextAreaFix("" + note.getDescription(), 0, 0, 500, 200), bag2);
+		bag2.gridx = 1;
+		bag2.gridy = 5;
+		p.add(addJTextFieldFix("", 0, 0, 500, 300), bag2);
 		
 		return p;
 	}
@@ -222,6 +260,23 @@ public class MainNotePad extends JFrame{
 		JTextField j = new JTextField();
 		j.setBounds(x, y, width, height);
 		j.setText(text);
+		j.setPreferredSize(new Dimension(width, height));
+		
+		return j;
+	}
+	
+	private JTextArea addJTextAreaFix(String text, int x, int y, int width, int height) {
+		JTextArea j = addJTextArea(text, x, y, width, height);
+		j.setEditable(false);
+		
+		return j;
+	}
+	
+	private JTextArea addJTextArea(String text, int x, int y, int width, int height) {
+		JTextArea j = new JTextArea();
+		j.setBounds(x, y, width, height);
+		j.setText(text);
+		j.setPreferredSize(new Dimension(width, height));
 		
 		return j;
 	}
