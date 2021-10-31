@@ -268,7 +268,8 @@ public class GuiMain extends JFrame implements WindowListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				GuiAdd guiAdd = new GuiAdd();
+				guiAdd.initGui();
 			}
 			
 		};

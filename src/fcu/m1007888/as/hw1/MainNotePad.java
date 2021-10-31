@@ -185,8 +185,19 @@ public class MainNotePad{
 		return getMapNotes().get(UID);
 	}
 	
-	private void addNote() {
+	public void addNote(Note note) {
+		int UID = 1;
+		while(getMapNotes().get(UID) != null) {
+			UID++;
+		}
+		note.setUID(UID);
+		getMapNotes().put(note.getUID(), note);
 		
+		logDEBUG("[add] reload gui");
+		clear();
+		reload(getMapNotes());
+		
+		logDEBUG("[add] Finish ===============");
 	}
 	
 	public void modifyNote(Note note) {
