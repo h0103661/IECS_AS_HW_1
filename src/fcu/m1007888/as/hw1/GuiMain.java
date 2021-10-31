@@ -10,12 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -35,7 +37,7 @@ public class GuiMain extends JFrame implements WindowListener{
 	private int layoutY = 768;
     private Container containerMain;
 	
-	public void initGui() {
+	public void initGui(Map<Integer, Note> notes) {
 		MainNotePad.getinstance().logDEBUG("[initGui] Start ===============");
 		
 		/*
@@ -67,7 +69,7 @@ public class GuiMain extends JFrame implements WindowListener{
         btn_search.addActionListener(getALSearchNote());
         jp_basicBtn.add(btn_search);
         
-        JLabel lb_total = addJLabel("總數: " + MainNotePad.getinstance().getMapNotes().size(), 200, 0, 100, 25);
+        JLabel lb_total = addJLabel("數量: " + notes.size(), 200, 0, 100, 25);
         jp_basicBtn.add(lb_total);
         
         containerMain.add(jp_basicBtn, BorderLayout.NORTH);
@@ -81,14 +83,14 @@ public class GuiMain extends JFrame implements WindowListener{
         BoxLayout layoutNotes = new BoxLayout(jp_notes, BoxLayout.PAGE_AXIS);
         jp_notes.setLayout(layoutNotes);
         
-        if (!MainNotePad.getinstance().getMapNotes().isEmpty()) {
-        	for (Note n : MainNotePad.getinstance().getMapNotes().values()) {
+        if (!notes.isEmpty()) {
+        	for (Note n : notes.values()) {
         		JPanel p = addGuiNote(n);
         		jp_notes.add(p);
         		MainNotePad.getinstance().logDEBUG("[initGui] add " + n.getUID());
         	}
         } else {
-        	jp_notes.add(addJLabel("無記錄", 0, 0, 100, 25));
+        	jp_notes.add(addJLabel("查無記錄", 0, 0, 100, 25));
         	MainNotePad.getinstance().logDEBUG("[initGui] no notes, skip");
         }
         
@@ -290,7 +292,14 @@ public class GuiMain extends JFrame implements WindowListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				MainNotePad.getinstance().logDEBUG("[search] Start ===============");
+				if(MainNotePad.getinstance().getMapNotes().isEmpty()) {
+					JOptionPane.showMessageDialog(new JFrame(), "沒有任何記錄可以搜尋!", "警告", JOptionPane.WARNING_MESSAGE);
+					MainNotePad.getinstance().logDEBUG("[search] no notes, exit");
+				} else {
+					GuiSearch guiSearch = new GuiSearch();
+					guiSearch.initGui();
+				}
 			}
 			
 		};
@@ -320,7 +329,8 @@ public class GuiMain extends JFrame implements WindowListener{
 				MainNotePad.getinstance().logDEBUG("[deleteNote] Start delete note " + UID);
 				MainNotePad.getinstance().deleteNote(UID);
 				MainNotePad.getinstance().logDEBUG("[deleteNote] finish, reload gui");
-				MainNotePad.getinstance().reload();
+				MainNotePad.getinstance().clear();
+				MainNotePad.getinstance().reload(MainNotePad.getinstance().getMapNotes());
 			}
 			
 		};

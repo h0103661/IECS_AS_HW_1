@@ -144,7 +144,7 @@ public class Note implements Serializable{
 	 */
 	
 	public boolean search(String people, String description, Date time, String location) {
-		return false;
+		return true;
 	}
 	
 	/*
@@ -157,7 +157,7 @@ public class Note implements Serializable{
 				"UID:" + this.getUID() + "\n" + 
 				"People: " + this.getPeople() + "\n" + 
 				"Date: " + this.getTime() + "\n" + 
-				"Location: " + this.location + "\n" + 
+				"Location: " + this.getLocation() + "\n" + 
 				"Description: " + this.getDescription() + "\n" + 
 				"ExtraLoc: " + this.getExtraLoc() + "\n";
 	}

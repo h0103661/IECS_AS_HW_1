@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -55,12 +56,19 @@ public class MainNotePad{
 		loadNotes();
 		
 		guiMain = new GuiMain();
-		guiMain.initGui();
+		getGuiMain().initGui(getMapNotes());
 	}
 	
-	public void reload() {
-		guiMain.clearGui();
-		guiMain.initGui();
+	public void clear() {
+		getGuiMain().clearGui();
+	}
+	
+	public void reload(Map<Integer, Note> note) {
+		getGuiMain().initGui(note);
+	}
+	
+	public GuiMain getGuiMain() {
+		return guiMain;
 	}
 	
 	/*
@@ -126,7 +134,7 @@ public class MainNotePad{
 				saveNotetoFile(n);
 			}
 		}
-		logDEBUG("[loadNotes] Finish ===============");
+		logDEBUG("[saveNotes] Finish ===============");
 	}
 	
 	private Note loadNoteFromFile(File file) {
@@ -171,7 +179,7 @@ public class MainNotePad{
 		}
 	}
 	
-	public Map<Integer, Note> getMapNotes(){
+	public Map<Integer, Note> getMapNotes() {
 		return mapNote;
 	}
 	
@@ -196,7 +204,25 @@ public class MainNotePad{
 		
 	}
 	
-	private void searchNote() {
+	public void searchNote(String people, String description, Date time, String location) {
+		MainNotePad.getinstance().logDEBUG("[search] people: " + people);
+		MainNotePad.getinstance().logDEBUG("[search] description: " + description);
+		MainNotePad.getinstance().logDEBUG("[search] time: " + time.toString());
+		MainNotePad.getinstance().logDEBUG("[search] location: " + location);
 		
+		Map<Integer, Note> notes = new TreeMap<Integer, Note>();
+		
+		for(Note n : getMapNotes().values()) {
+			if (n.search(people, description, time, location)) {
+				notes.put(n.getUID(), n);
+				MainNotePad.getinstance().logDEBUG("[search] add note " + n.getUID());
+			}
+		}
+		
+		logDEBUG("[search] reload gui");
+		clear();
+		reload(notes);
+		
+		logDEBUG("[search] Finish ===============");
 	}
 }
