@@ -69,7 +69,15 @@ public class GuiMain extends JFrame implements WindowListener{
         btn_search.addActionListener(getALSearchNote());
         jp_basicBtn.add(btn_search);
         
-        JLabel lb_total = addJLabel("數量: " + notes.size(), 200, 0, 100, 25);
+        JButton btn_searchDay = addJButton("依日期選取", 300, 0, 100, 25);
+        btn_searchDay.addActionListener(getALSearchNoteDay());
+        jp_basicBtn.add(btn_searchDay);
+        
+        JButton btn_searchWeek = addJButton("依周選取", 400, 0, 100, 25);
+        btn_searchWeek.addActionListener(getALSearchNoteWeek());
+        jp_basicBtn.add(btn_searchWeek);
+        
+        JLabel lb_total = addJLabel("數量: " + notes.size(), 500, 0, 100, 25);
         jp_basicBtn.add(lb_total);
         
         containerMain.add(jp_basicBtn, BorderLayout.NORTH);
@@ -302,6 +310,44 @@ public class GuiMain extends JFrame implements WindowListener{
 				} else {
 					GuiSearch guiSearch = new GuiSearch();
 					guiSearch.initGui();
+				}
+			}
+			
+		};
+		return al;
+	}
+	
+	private ActionListener getALSearchNoteDay() {
+		ActionListener al = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MainNotePad.getinstance().logDEBUG("[search] Start ===============");
+				if(MainNotePad.getinstance().getMapNotes().isEmpty()) {
+					JOptionPane.showMessageDialog(new JFrame(), "沒有任何記錄可以搜尋!", "警告", JOptionPane.WARNING_MESSAGE);
+					MainNotePad.getinstance().logDEBUG("[search] no notes, exit");
+				} else {
+					String time = JOptionPane.showInputDialog(new JFrame(), "時間:", "依日期選取", JOptionPane.INFORMATION_MESSAGE);
+					MainNotePad.getinstance().searchNote("", "", time, "");
+				}
+			}
+			
+		};
+		return al;
+	}
+	
+	private ActionListener getALSearchNoteWeek() {
+		ActionListener al = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MainNotePad.getinstance().logDEBUG("[search] Start ===============");
+				if(MainNotePad.getinstance().getMapNotes().isEmpty()) {
+					JOptionPane.showMessageDialog(new JFrame(), "沒有任何記錄可以搜尋!", "警告", JOptionPane.WARNING_MESSAGE);
+					MainNotePad.getinstance().logDEBUG("[search] no notes, exit");
+				} else {
+					String week = JOptionPane.showInputDialog(new JFrame(), "周:", "依周選取", JOptionPane.INFORMATION_MESSAGE);
+					MainNotePad.getinstance().searchNoteByWeek(week);
 				}
 			}
 			

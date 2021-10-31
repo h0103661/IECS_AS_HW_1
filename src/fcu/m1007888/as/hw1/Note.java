@@ -4,7 +4,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import javax.imageio.ImageIO;
 
@@ -178,6 +181,26 @@ public class Note implements Serializable{
 		}
 		
 		return isTrue;
+	}
+	
+	public boolean search(int week) {
+		DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+		Date date = null;
+		try {
+			date = df.parse(getTime());
+		} catch (ParseException e) {
+			MainNotePad.getinstance().logDEBUG("[searchByWeek] note " + getUID() + " can not parse Date");
+		}
+		if(date != null) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			int weeknow = cal.get(Calendar.WEEK_OF_YEAR);
+			if(weeknow == week) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/*

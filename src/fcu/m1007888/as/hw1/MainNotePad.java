@@ -244,4 +244,23 @@ public class MainNotePad{
 		
 		logDEBUG("[search] Finish ===============");
 	}
+	
+	public void searchNoteByWeek(String weekS) {
+		int week = Integer.parseInt(weekS);
+		MainNotePad.getinstance().logDEBUG("[search] week: " + week);
+		Map<Integer, Note> notes = new TreeMap<Integer, Note>();
+		
+		for(Note n : getMapNotes().values()) {
+			if (n.search(week)) {
+				notes.put(n.getUID(), n);
+				MainNotePad.getinstance().logDEBUG("[search] add note " + n.getUID());
+			}
+		}
+		
+		logDEBUG("[search] reload gui");
+		clear();
+		reload(notes);
+		
+		logDEBUG("[search] Finish ===============");
+	}
 }
