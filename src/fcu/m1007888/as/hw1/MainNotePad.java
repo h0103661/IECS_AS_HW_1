@@ -207,7 +207,11 @@ public class MainNotePad{
 	public void searchNote(String people, String description, Date time, String location) {
 		MainNotePad.getinstance().logDEBUG("[search] people: " + people);
 		MainNotePad.getinstance().logDEBUG("[search] description: " + description);
-		MainNotePad.getinstance().logDEBUG("[search] time: " + time.toString());
+		if(time == null) {
+			MainNotePad.getinstance().logDEBUG("[search] time: " + "NULL");
+		} else {
+			MainNotePad.getinstance().logDEBUG("[search] time: " + time.toString());
+		}
 		MainNotePad.getinstance().logDEBUG("[search] location: " + location);
 		
 		Map<Integer, Note> notes = new TreeMap<Integer, Note>();

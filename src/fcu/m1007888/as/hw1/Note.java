@@ -144,7 +144,37 @@ public class Note implements Serializable{
 	 */
 	
 	public boolean search(String people, String description, Date time, String location) {
-		return true;
+		boolean isTrue = false;
+		if(people != null && !people.isEmpty() && !people.isBlank()) {
+			if(this.getPeople().contains(people)) {
+				isTrue = true;
+			} else {
+				return false;
+			}
+		}
+		if(description != null && !description.isEmpty() && !description.isBlank()) {
+			if(this.getDescription().contains(description)) {
+				isTrue = true;
+			} else {
+				return false;
+			}
+		}
+		if(location != null && !location.isEmpty() && !location.isBlank()) {
+			if(this.getLocation().contains(location)) {
+				isTrue = true;
+			} else {
+				return false;
+			}
+		}
+		if(time != null) {
+			if(this.getTime().contains(time.toString())) {
+				isTrue = true;
+			} else {
+				return false;
+			}
+		}
+		
+		return isTrue;
 	}
 	
 	/*

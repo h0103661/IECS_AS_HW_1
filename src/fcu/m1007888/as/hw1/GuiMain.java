@@ -280,7 +280,9 @@ public class GuiMain extends JFrame implements WindowListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				MainNotePad.getinstance().logDEBUG("[showAllNote] reload gui");
+				MainNotePad.getinstance().clear();
+				MainNotePad.getinstance().reload(MainNotePad.getinstance().getMapNotes());
 			}
 			
 		};
