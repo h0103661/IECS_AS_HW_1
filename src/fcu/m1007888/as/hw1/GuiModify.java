@@ -7,11 +7,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ImageIcon;
+import java.io.File;
+
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -31,9 +32,8 @@ public class GuiModify extends JFrame{
 	private int layoutX = 1024;
 	private int layoutY = 768;
     private Container containerMain;
-    private JTextField tf_people, tf_time, tf_location;
+    private JTextField tf_people, tf_time, tf_location, tf_extra;
 	private JTextArea tf_description;
-	private String tf_extra;
     
     private int UID = 0;
     
@@ -76,11 +76,16 @@ public class GuiModify extends JFrame{
 		containerMain.add(addJLabel("附件" + ":", 0, 0, lx1, ly1), bag1);
 		bag1.gridx = 0;
 		bag1.gridy = 6;
+		JButton btnD = addJButton("刪除附件", 0, 0, lx1, ly1);
+		btnD.addActionListener(getALDeleteExtra());
+		containerMain.add(btnD, bag1);
+		bag1.gridx = 0;
+		bag1.gridy = 7;
 		JButton btnM = addJButton("更改附件", 0, 0, lx1, ly1);
 		btnM.addActionListener(getALChangeExtra());
 		containerMain.add(btnM, bag1);
 		bag1.gridx = 0;
-		bag1.gridy = 7;
+		bag1.gridy = 8;
 		JButton btnS = addJButton("送出", 0, 0, lx1, ly1);
 		btnS.addActionListener(getALSendModify());
 		containerMain.add(btnS, bag1);
@@ -92,7 +97,6 @@ public class GuiModify extends JFrame{
 		int lx2 = 900;
 		int ly2 = 25;
 		int ly2b = 200;
-		int ly2c = 300;
 		GridBagConstraints bag2 = new GridBagConstraints();
 		bag2.gridx = 1;
 		bag2.gridy = 0;
@@ -115,17 +119,8 @@ public class GuiModify extends JFrame{
 		containerMain.add(tf_description, bag2);
 		bag2.gridx = 1;
 		bag2.gridy = 5;
-		if(note.hasExtra() == 1) {
-			tf_extra = note.getExtraLoc();
-			JLabel j = new JLabel(new ImageIcon(note.getImg()));
-			JScrollPane sp = new JScrollPane(j);
-			sp.setPreferredSize(new Dimension(lx2, ly2c));
-			containerMain.add(sp, bag2);
-		} else if(note.hasExtra() == 2) {
-			containerMain.add(addJTextFieldFix("", 0, 0, lx2, ly2c), bag2);
-		} else {
-			containerMain.add(addJTextFieldFix("", 0, 0, lx2, ly2c), bag2);
-		}
+		tf_extra = addJTextFieldFix("" + note.getExtraLoc(), 0, 0, lx2, ly2);
+		containerMain.add(tf_extra, bag2);
 		
 		setVisible(true);
     }
@@ -174,12 +169,29 @@ public class GuiModify extends JFrame{
 	 * 
 	 */
 	
+	private ActionListener getALDeleteExtra() {
+		ActionListener al = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tf_extra.setText("");
+			}
+			
+		};
+		return al;
+	}
+	
 	private ActionListener getALChangeExtra() {
 		ActionListener al = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				JFileChooser fileChooser = new JFileChooser();
+		        int returnValue = fileChooser.showOpenDialog(null);
+		        if (returnValue == JFileChooser.APPROVE_OPTION){
+			        File selectedFile = fileChooser.getSelectedFile();
+			        tf_extra.setText(selectedFile.getAbsolutePath());
+		        }
 			}
 			
 		};
@@ -212,7 +224,7 @@ public class GuiModify extends JFrame{
     	note.setTime(tf_time.getText());
     	note.setLocation(tf_location.getText());
     	note.setDescription(tf_description.getText());
-    	note.setExtraLoc(tf_extra);
+    	note.setExtraLoc(tf_extra.getText());
     	note.loadImg();
     	MainNotePad.getinstance().modifyNote(note);
     }
