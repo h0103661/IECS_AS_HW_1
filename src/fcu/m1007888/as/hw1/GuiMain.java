@@ -311,11 +311,11 @@ public class GuiMain extends JFrame implements WindowListener{
 	private ActionListener getALNoteModify(int noteUID) {
 		ActionListener al = new ActionListener() {
 
-			@SuppressWarnings("unused")
 			final int UID = noteUID;
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				GuiModify guiModify = new GuiModify();
+				guiModify.initGui(UID);
 			}
 			
 		};

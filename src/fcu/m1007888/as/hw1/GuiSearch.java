@@ -6,20 +6,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class GuiSearch extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private static String frameName = "記事本程式";
+	private static String frameName = "搜尋";
 	
 	public GuiSearch() {
 		
@@ -27,7 +22,7 @@ public class GuiSearch extends JFrame{
 	
 	private String people = "";
 	private String description = "";
-	private Date time = new java.util.Date();
+	private String time = "";
 	private String location = "";
 	
 	/*
@@ -88,16 +83,16 @@ public class GuiSearch extends JFrame{
 		containerMain.add(tf_people, bag2);
 		bag2.gridx = 1;
 		bag2.gridy = 1;
-		tf_description = addJTextField("", 0, 0, lx2, ly2);
-		containerMain.add(tf_description, bag2);
-		bag2.gridx = 1;
-		bag2.gridy = 2;
 		tf_time = addJTextField("", 0, 0, lx2, ly2);
 		containerMain.add(tf_time, bag2);
 		bag2.gridx = 1;
-		bag2.gridy = 3;
+		bag2.gridy = 2;
 		tf_location = addJTextField("", 0, 0, lx2, ly2);
 		containerMain.add(tf_location, bag2);
+		bag2.gridx = 1;
+		bag2.gridy = 3;
+		tf_description = addJTextField("", 0, 0, lx2, ly2);
+		containerMain.add(tf_description, bag2);
 		
 		/*
          * finish
@@ -158,17 +153,7 @@ public class GuiSearch extends JFrame{
     		description = tf_description.getText();
     	}
     	if (tf_time != null && !tf_time.getText().isEmpty() && !tf_time.getText().isBlank()) {
-    		DateFormat df = DateFormat.getDateInstance();
-    		try {
-				time = df.parse(tf_time.getText());
-			} catch (ParseException e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(new JFrame(), "欲查詢的時間格式錯誤, 建議使用yyyy/mm/dd", "錯誤", JOptionPane.ERROR_MESSAGE);
-				dispose();
-				MainNotePad.getinstance().logDEBUG("[search] dispose search gui");
-			}
-    	} else {
-    		time = null;
+    		time = tf_time.getText();
     	}
     	if (tf_location != null && !tf_location.getText().isEmpty() && !tf_location.getText().isBlank()) {
     		location = tf_location.getText();

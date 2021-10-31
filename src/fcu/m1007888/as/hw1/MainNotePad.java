@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -101,7 +100,6 @@ public class MainNotePad{
 		/*Note test1 = new Note();
 		test1.setUID(1);
 		test1.setPeople("自己");
-		test1.setTime(new java.util.Date());
 		test1.setLocation("eclipse workspace");
 		test1.setDescription("這是一個測試記錄\n包含完整訊息和一張預設圖片。");
 		test1.setExtraLoc("img.jpeg");
@@ -183,28 +181,34 @@ public class MainNotePad{
 		return mapNote;
 	}
 	
+	public Note getNote(int UID) {
+		return getMapNotes().get(UID);
+	}
+	
 	private void addNote() {
 		
 	}
 	
-	private void modifyNote() {
+	public void modifyNote(Note note) {
+		getMapNotes().put(note.getUID(), note);
 		
+		logDEBUG("[modify] reload gui");
+		clear();
+		reload(getMapNotes());
+		
+		logDEBUG("[modify] Finish ===============");
 	}
 	
 	public void deleteNote(int UID) {
-		if(!mapNote.isEmpty()) {
-			mapNote.remove(UID);
+		if(!getMapNotes().isEmpty()) {
+			getMapNotes().remove(UID);
 			logDEBUG("[deleteNote] remove from map");
 		}
 		deleteNoteFile(UID);
 		logDEBUG("[deleteNote] delete file");
 	}
 	
-	private void showNote() {
-		
-	}
-	
-	public void searchNote(String people, String description, Date time, String location) {
+	public void searchNote(String people, String description, String time, String location) {
 		MainNotePad.getinstance().logDEBUG("[search] people: " + people);
 		MainNotePad.getinstance().logDEBUG("[search] description: " + description);
 		if(time == null) {

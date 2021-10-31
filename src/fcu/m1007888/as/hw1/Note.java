@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.imageio.ImageIO;
 
@@ -15,7 +16,7 @@ public class Note implements Serializable{
 	
 	private String people;
 	private String description;
-	private Date time;
+	private String time;
 	private String location;
 	
 	private String extraLoc;
@@ -25,7 +26,9 @@ public class Note implements Serializable{
 	public Note() {
 		setUID(0);
 		setPeople("");
-		setTime(new java.util.Date());
+		SimpleDateFormat format = new SimpleDateFormat ("yyyy/MM/dd");
+		Date now = new Date();
+		setTime(format.format(now));
 		setLocation("");
 		setDescription("");
 		setExtraLoc("");
@@ -66,13 +69,13 @@ public class Note implements Serializable{
 	}
 
 	public String getTime() {
-		if(time == null) {
+		if(time == null || time.isEmpty() || time.isBlank()) {
 			return "";
 		}
 		return time.toString();
 	}
 
-	public void setTime(Date time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 
@@ -143,7 +146,7 @@ public class Note implements Serializable{
 	 * 
 	 */
 	
-	public boolean search(String people, String description, Date time, String location) {
+	public boolean search(String people, String description, String time, String location) {
 		boolean isTrue = false;
 		if(people != null && !people.isEmpty() && !people.isBlank()) {
 			if(this.getPeople().contains(people)) {
@@ -166,7 +169,7 @@ public class Note implements Serializable{
 				return false;
 			}
 		}
-		if(time != null) {
+		if(time != null && !time.isEmpty() && !time.isBlank()) {
 			if(this.getTime().contains(time.toString())) {
 				isTrue = true;
 			} else {
