@@ -96,5 +96,30 @@ class MainNotePadTest {
     	
 		assertEquals(expectedAns, hasNote);
 	}
+	
+	@Test
+	public void addNotes300() {
+		/*
+		 * values
+		 */
+		int testAmount = 301;
+		testNote = getTestNote();
+		
+		/*
+		 * test
+		 */
+		for(int i = 0; i < testAmount; i++) {
+			instance.addNote(testNote);
+		}
+		
+    	int countNote = instance.getMapNotes().size();
+    	
+    	/*
+    	 * expected
+    	 */
+    	int expectedAns = testAmount;
+    	
+		assertEquals(expectedAns, countNote);
+	}
 
 }
