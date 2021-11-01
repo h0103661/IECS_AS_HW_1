@@ -377,6 +377,9 @@ public class GuiMain extends JFrame implements WindowListener{
 			public void actionPerformed(ActionEvent e) {
 				MainNotePad.getinstance().logDEBUG("[deleteNote] Start delete note " + UID);
 				MainNotePad.getinstance().deleteNote(UID);
+				MainNotePad.getinstance().logDEBUG("[deleteNote] remove from map");
+				MainNotePad.getinstance().deleteNoteFile(UID);
+				MainNotePad.getinstance().logDEBUG("[deleteNote] delete file");
 				MainNotePad.getinstance().logDEBUG("[deleteNote] finish, reload gui");
 				MainNotePad.getinstance().clear();
 				MainNotePad.getinstance().reload(MainNotePad.getinstance().getMapNotes());

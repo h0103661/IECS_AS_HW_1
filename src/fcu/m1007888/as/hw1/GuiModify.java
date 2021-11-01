@@ -205,6 +205,10 @@ public class GuiModify extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				MainNotePad.getinstance().logDEBUG("[modify] start modify");
 				sendModify();
+				MainNotePad.getinstance().logDEBUG("[modify] reload gui");
+				MainNotePad.getinstance().clear();
+				MainNotePad.getinstance().reload(MainNotePad.getinstance().getMapNotes());
+				MainNotePad.getinstance().logDEBUG("[modify] Finish ===============");
 				dispose();
 				MainNotePad.getinstance().logDEBUG("[modify] dispose modify gui");
 			}

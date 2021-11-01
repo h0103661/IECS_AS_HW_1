@@ -194,6 +194,10 @@ public class GuiAdd extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				MainNotePad.getinstance().logDEBUG("[add] start add");
 				sendNewNote();
+				MainNotePad.getinstance().logDEBUG("[add] reload gui");
+				MainNotePad.getinstance().clear();
+				MainNotePad.getinstance().reload(MainNotePad.getinstance().getMapNotes());
+				MainNotePad.getinstance().logDEBUG("[add] Finish ===============");
 				dispose();
 				MainNotePad.getinstance().logDEBUG("[add] dispose add gui");
 			}

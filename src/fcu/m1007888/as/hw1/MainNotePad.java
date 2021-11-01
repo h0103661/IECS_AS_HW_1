@@ -74,10 +74,14 @@ public class MainNotePad{
 	 * function
 	 */
 	
+	public void createMapNote() {
+		mapNote = new TreeMap<Integer, Note>();
+	}
+	
 	private void loadNotes() {
 		logDEBUG("[loadNotes] Start ===============");
 		
-		mapNote = new TreeMap<Integer, Note>();
+		createMapNote();
 		File folder = new File("data");
 		if (!folder.exists()) {
 			folder.mkdir();
@@ -170,7 +174,7 @@ public class MainNotePad{
 		}
 	}
 	
-	private void deleteNoteFile(int UID) {
+	public void deleteNoteFile(int UID) {
 		File file = new File("data" + File.separator + "note_" + UID + ".data");
 		if (file.exists()) {
 			file.delete();
@@ -181,11 +185,15 @@ public class MainNotePad{
 		return mapNote;
 	}
 	
+	public boolean hasNote(int UID) {
+		return getMapNotes().containsKey(UID);
+	}
+	
 	public Note getNote(int UID) {
 		return getMapNotes().get(UID);
 	}
 	
-	public void addNote(Note note) {
+	public Note addNote(Note note) {
 		int UID = 1;
 		while(getMapNotes().get(UID) != null) {
 			UID++;
@@ -193,30 +201,17 @@ public class MainNotePad{
 		note.setUID(UID);
 		getMapNotes().put(note.getUID(), note);
 		
-		logDEBUG("[add] reload gui");
-		clear();
-		reload(getMapNotes());
-		
-		logDEBUG("[add] Finish ===============");
+		return getMapNotes().get(UID);
 	}
 	
-	public void modifyNote(Note note) {
+	public Note modifyNote(Note note) {
 		getMapNotes().put(note.getUID(), note);
 		
-		logDEBUG("[modify] reload gui");
-		clear();
-		reload(getMapNotes());
-		
-		logDEBUG("[modify] Finish ===============");
+		return getMapNotes().get(note.getUID());
 	}
 	
 	public void deleteNote(int UID) {
-		if(!getMapNotes().isEmpty()) {
-			getMapNotes().remove(UID);
-			logDEBUG("[deleteNote] remove from map");
-		}
-		deleteNoteFile(UID);
-		logDEBUG("[deleteNote] delete file");
+		getMapNotes().remove(UID);
 	}
 	
 	public void searchNote(String people, String description, String time, String location) {

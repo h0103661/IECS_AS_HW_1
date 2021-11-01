@@ -1,12 +1,11 @@
 package fcu.m1007888.as.hw1.test;
 
 import static org.junit.Assert.*;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import fcu.m1007888.as.hw1.Note;
 
-public class NoteTest {
+class NoteTest {
 	
 	private Note testNote;
 	
@@ -16,6 +15,7 @@ public class NoteTest {
 	
 	private Note getTestNote() {
 		Note note = new Note();
+		note.setUID(1);
     	note.setPeople("dummy");
     	note.setTime("2021/01/01");
     	note.setLocation("junit");
